@@ -1,6 +1,7 @@
 package com.serenitydojo.playwright;
 
 import com.microsoft.playwright.*;
+import com.microsoft.playwright.assertions.PlaywrightAssertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -19,7 +20,9 @@ public class PlaywrightLocatorsTest {
     static void setUpBrowser() {
         playwright = Playwright.create();
         browser = playwright.chromium().launch(
-                new BrowserType.LaunchOptions().setHeadless(true)
+                new BrowserType.LaunchOptions()
+                        .setHeadless(false)
+                        .setSlowMo(500)
                         .setArgs(Arrays.asList("--no-sandbox", "--disable-extensions", "--disable-gpu"))
         );
     }
@@ -187,18 +190,24 @@ public class PlaywrightLocatorsTest {
         @Test
         void byText() {
             page.getByText("Bolt Cutters").click();
+
+            PlaywrightAssertions.assertThat(page.getByText("MightyCraft hardware")).isVisible();
         }
 
         @DisplayName("Using alt text")
         @Test
         void byAltText() {
-            // TODO: Make it so
+            page.getByAltText("Combination Pliers").click();
+
+            PlaywrightAssertions.assertThat(page.getByText("ForgeFlex Tools")).isVisible();
         }
 
         @DisplayName("Using title")
         @Test
         void byTitle() {
-            // TODO: Make it so
+            page.getByAltText("Combination Pliers").click();
+
+            page.getByTitle("Practice Software Testing - Toolshop").click();
         }
     }
 
